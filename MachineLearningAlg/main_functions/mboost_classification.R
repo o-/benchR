@@ -19,8 +19,9 @@ mcrs <- numeric(repls)
 for (repl in seq_len(repls)) {
   set.seed(repl)
   train <- sample(nrow(problem)) < floor(2/3 * nrow(problem))
-  mod <- mboost(y ~ ., data = problem[train, ], family=Binomial())
-  predicted = predict(mod, problem[!train, ], type = "class")
+  mod <- mboost(y ~ ., data = problem[train, ], family=Binomial(), control = boost_control(mstop = 1))
+  mod[mstop(cvrisk(mod, papply = lapply, grid = 1:100))]
+  predicted <- predict(mod, problem[!train, ], type = "class")
   mcrs[repl] <- mean(problem$y[!train] == predicted)
 }
 message(round(mean(mcrs), 4))

@@ -19,7 +19,8 @@ R2 <- numeric(repls)
 for (repl in seq_len(repls)) {
   set.seed(repl)
   train <- sample(nrow(problem)) < floor(2/3 * nrow(problem))
-  mod <- mboost(y ~ ., data = problem[train, ])
+  mod <- mboost(y ~ ., data = problem[train, ], control = boost_control(mstop = 1))
+  mod[mstop(cvrisk(mod, papply = lapply, grid = 1:100))]
   y <- problem[!train, "y"]
   y.hat <- predict(mod, problem[!train, ])
   R2[repl] <- 1 - sum((y - y.hat)^2) / sum((y - mean(y))^2)
