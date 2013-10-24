@@ -1,0 +1,31 @@
+USAGE
+    Rscript bench-sim.R [type] [task] [learner] [repl]
+    Rscript bench-data.R [type] [task] [learner] [repl]
+
+    * type: either "regr" for regression or "classif" for classification.
+      For mlrdata benchmarks: (for now) only classif supported
+    * task: file in directory "simulated" or "mlrdata-cache" (w/o preceding "[type]_")
+      which identifies the task
+    * learner: a mlr learner identifier, see below
+    * repl: number of replications, e.g. subsample repetitions
+
+    List of R learners for regression:
+    Rscript -e 'mlr::listLearners("regr")'
+
+    List of R learners for classification:
+    Rscript -e 'mlr::listLearners("classif")'
+
+
+INSTALLATION
+    Soon on CRAN, then Rscript -e 'install.packages("mlr")'
+
+    Devel version: 
+        svn checkout svn://svn.r-forge.r-project.org/svnroot/mlr/
+        cd mlr/mlr
+        make dependencies
+        make install
+
+EXAMPLE
+    Rscript bench-sim.R regr sim01 lm 100
+    Rscript bench-sim.R classif sim10 randomForest 10
+    Rscript bench-data.R classif Vowel rpart 10
