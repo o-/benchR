@@ -1,9 +1,16 @@
 # ------------------------------------------------------------------
-# Contributed by Michel Lang, TU Dortmund
-# ------------------------------------------------------------------
+# This material is distributed under the GNU General Public License
+# Version 2. You may review the terms of this license at
+# http://www.gnu.org/licenses/gpl-2.0.html
+#
+# Copyright (c) 2012-2013, Michel Lang, Helena Kotthaus,
+# TU Dortmund University
+#
 # Simple linear regression using the stats package with default parameters
 # USEAGE: Rscript [scriptfile] [problem-number] [number of replications]
 # Output: unadjusted R^2
+# ------------------------------------------------------------------
+
 library(stats)
 type <- "regression"
 
