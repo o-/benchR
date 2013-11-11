@@ -8,7 +8,9 @@
 #
 # All rights reserved.
 #
-# L1-penalized logistic regression using the glmnet package with default parameters
+# L1-penalized logistic regression using the glmnet package with 
+# default parameters
+# 
 # USEAGE: Rscript [scriptfile] [problem-number] [number of replications]
 # Output: Misclassification rate
 # ------------------------------------------------------------------
