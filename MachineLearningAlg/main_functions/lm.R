@@ -6,6 +6,8 @@
 # Copyright (c) 2012-2013, Michel Lang, Helena Kotthaus,
 # TU Dortmund University
 #
+# All rights reserved.
+#
 # Simple linear regression using the stats package with default parameters
 # USEAGE: Rscript [scriptfile] [problem-number] [number of replications]
 # Output: unadjusted R^2
