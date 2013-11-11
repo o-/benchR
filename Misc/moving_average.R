@@ -1,8 +1,19 @@
 # ------------------------------------------------------------------
-# Contributed by Michel Lang, TU Dortmund
-# ------------------------------------------------------------------
-### Exemplary moving median on a time series
+# The Computer Language Shootout
+# http://shootout.alioth.debian.org/
+#
+# This material is distributed under the GNU General Public License
+# Version 2. You may review the terms of this license at
+# http://www.gnu.org/licenses/gpl-2.0.html
+#
+# Copyright (c) 2012-2013, Michel Lang, Helena Kotthaus,
+# TU Dortmund University
+#
+# All rights reserved.
+#
+# Exemplary moving median on a time series
 # Moving averages are used to smooth time series and reduce the noise.
+# ------------------------------------------------------------------
 
 # change these numbers to get a suitable runtime
 n <- 1000   # number of observation in time series
