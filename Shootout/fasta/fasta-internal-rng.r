@@ -1,6 +1,9 @@
 #!/usr/bin/env Rscript
 
 # ------------------------------------------------------------------
+# The Computer Language Shootout
+# http://shootout.alioth.debian.org/
+#
 # This material is distributed under the GNU General Public License
 # Version 2. You may review the terms of this license at
 # http://www.gnu.org/licenses/gpl-2.0.html 
@@ -9,9 +12,6 @@
 # TU Dortmund University
 #
 # All rights reserved.
-#
-# The Computer Language Shootout
-# http://shootout.alioth.debian.org/
 #
 # Version with internal random number generator
 # ------------------------------------------------------------------
