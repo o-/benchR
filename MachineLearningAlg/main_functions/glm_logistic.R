@@ -9,6 +9,7 @@
 # All rights reserved.
 #
 # Logistic regression (as generalized linear model) using the stats package
+#
 # USEAGE: Rscript [scriptfile] [problem-number] [number of replications]
 # Output: Misclassification rate
 # ------------------------------------------------------------------
