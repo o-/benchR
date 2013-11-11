@@ -1,5 +1,4 @@
 #!/usr/bin/env Rscript
-
 # ------------------------------------------------------------------
 # The Computer Language Shootout
 # http://shootout.alioth.debian.org/
