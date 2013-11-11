@@ -1,8 +1,7 @@
 #!/usr/bin/env Rscript
 # ------------------------------------------------------------------
 # The Computer Language Shootout
-# http://shootout.alioth.debian.org/
-#
+# http://shootout.alioth.debian.org/ 
 #
 # This material is distributed under the GNU General Public License
 # Version 2. You may review the terms of this license at
@@ -12,7 +11,8 @@
 # TU Dortmund University
 #
 # All rights reserved.
-#
+# ------------------------------------------------------------------
+
 
 n <- as.integer(commandArgs(trailingOnly = TRUE)[1])
 
