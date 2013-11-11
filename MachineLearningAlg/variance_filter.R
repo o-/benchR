@@ -1,12 +1,19 @@
 # ------------------------------------------------------------------
-# Contributed by Michel Lang, TU Dortmund
-# ------------------------------------------------------------------
-
-### Exemplary variance filter on a big matrix
+# This material is distributed under the GNU General Public License
+# Version 2. You may review the terms of this license at
+# http://www.gnu.org/licenses/gpl-2.0.html
+#
+# Copyright (c) 2012-2013, Michel Lang, Helena Kotthaus,
+# TU Dortmund University
+#
+# All rights reserved.
+#
+# Exemplary variance filter on a big matrix
 # Sometimes used in gene expression analysis to pre-filter the
 # number of covariates. Only top N covariates are kept for further
 # analysis. This has to be done on the training set only, otherwise
 # biased results are probable.
+# ------------------------------------------------------------------
 
 # change these numbers to get suitable runtime
 n <- 300    # number of observations
