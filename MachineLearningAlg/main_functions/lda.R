@@ -8,7 +8,9 @@
 #
 # All rights reserved.
 #
-# Linear discriminant analysis using the MASS package with default parameters
+# Linear discriminant analysis using the MASS package with 
+# default parameters
+#
 # USEAGE: Rscript [scriptfile] [problem-number] [number of replications]
 # Output: Misclassification rate
 # ------------------------------------------------------------------
