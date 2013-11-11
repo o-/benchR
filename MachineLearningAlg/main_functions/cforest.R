@@ -1,9 +1,25 @@
 # ------------------------------------------------------------------
-# Contributed by Michel Lang, TU Dortmund
-# ------------------------------------------------------------------
-# Random classification forest with conditional inference trees using the party package with default parameters
+# The Computer Language Shootout
+# http://shootout.alioth.debian.org/
+#
+# This material is distributed under the GNU General Public License
+# Version 2. You may review the terms of this license at
+# http://www.gnu.org/licenses/gpl-2.0.html
+#
+# Copyright (c) 2012-2013, Michel Lang, Helena Kotthaus,
+# TU Dortmund University
+#
+# All rights reserved.
+#
+#
+# Random classification forest with conditional inference trees using 
+# the party package with default parameters
+#
 # USEAGE: Rscript [scriptfile] [problem-number] [number of replications]
 # Output: Misclassification rate
+# ------------------------------------------------------------------
+
+
 library(party)
 type <- "classification"
 
