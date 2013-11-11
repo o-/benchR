@@ -8,7 +8,9 @@
 #
 # All rights reserved.
 #
-# Conditional inference classification trees using the party package with default parameters
+# Conditional inference classification trees using the party package with 
+# default parameters
+#
 # USEAGE: Rscript [scriptfile] [problem-number] [number of replications]
 # Output: Misclassification rate
 # ------------------------------------------------------------------
