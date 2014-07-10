@@ -1,0 +1,210 @@
+#!/usr/bin/env ruby
+
+require 'yaml'
+require 'descriptive_statistics'
+require 'colorize'
+require 'open3'
+
+def usage
+  puts "#{__FILE__} [--baseline] Rscript_executable [-n<runs>]"
+end
+
+if ARGV.length < 1 || ARGV.length > 3 ||
+   (!ARGV[-1].start_with?('-n') && !File.exists?(ARGV[-1]))
+  usage
+  exit(2)
+end
+
+IS_BASELINE = ARGV[0] == '--baseline'
+
+if IS_BASELINE && !File.exists?(ARGV[1]) && !File.exists?(ARGV[0])
+  usage
+  exit(2)
+end
+
+if IS_BASELINE
+  puts "Recording new baseline\n".yellow
+end
+
+R_BIN       = File.expand_path(if IS_BASELINE then ARGV[1] else ARGV[0] end)
+
+BASEDIR     = File.expand_path(File.dirname(__FILE__))
+BASELINE    = File.join(BASEDIR, 'baseline.yaml')
+
+RUN         = if ARGV[-1].start_with?('-n')
+                ARGV[-1][2..-1].to_i
+              else
+                if IS_BASELINE then 4 else 2 end
+              end
+
+BENCH       = [
+   ['MachineLearningAlg/main_functions', 'ada.R', 'c(2, 1)'],
+   ['MachineLearningAlg/main_functions', 'cforest.R', 'c(1, 10)'],
+   ['MachineLearningAlg/main_functions', 'ctree.R', 'c(3, 20)'],
+   ['MachineLearningAlg/main_functions', 'glm_logistic.R', 'c(3, 50)'],
+#   ['MachineLearningAlg/main_functions', 'glmnet_classification.R', '2 1'],
+#   ['MachineLearningAlg/main_functions', 'glmnet_regression.R', 'c(2, 1)'],
+   ['MachineLearningAlg/main_functions', 'knn.R', 'c(4, 40)'],
+#   ['MachineLearningAlg/main_functions', 'ksvm.R', 'c(2, 2)'],
+   ['MachineLearningAlg/main_functions', 'lda.R', 'c(2, 100)'],
+   ['MachineLearningAlg/main_functions', 'lm.R', 'c(2, 200)'],
+#   ['MachineLearningAlg/main_functions', 'mboost_classification.R', '2 1'],
+#   ['MachineLearningAlg/main_functions', 'mboost_regression.R', '2 1'],
+#   ['MachineLearningAlg/main_functions', 'pen_l1_classification.R', '1 2'],
+   ['MachineLearningAlg/main_functions', 'pen_l1_regression.R', 'c(1, 2)'],
+   ['MachineLearningAlg/main_functions', 'qda.R', 'c(4, 80)'],
+   ['MachineLearningAlg/main_functions', 'randomForest.R', 'c(2, 2)'],
+   ['MachineLearningAlg/main_functions', 'rda_as_lda.R', 'c(3, 30)'],
+#   ['MachineLearningAlg/main_functions', 'rda_as_qda.R', '2 12'],
+#   ['MachineLearningAlg/main_functions', 'rda_regularized.R', '2 12'],
+   ['MachineLearningAlg/main_functions', 'svm.R', 'c(2, 10)'],
+   ['MachineLearningAlg/main_functions', 'tree.R', 'c(5, 50)'],
+   ['Misc', 'bin_packing.R', '1'],
+   ['Shootout/spectralnorm', 'spectral-norm.r', '2000'],
+   ['R-benchmark', 'R-benchmark-25-1.R'],
+   ['R-benchmark', 'R-benchmark-25-2.R'],
+   ['R-benchmark', 'R-benchmark-25-3.R'],
+#   ['R-benchmark', 'R-benchmark-25-4.R'],
+#   ['R-benchmark', 'R-benchmark-25-5.R'],
+   ['R-benchmark', 'R-benchmark-25-6.R'],
+   ['R-benchmark', 'R-benchmark-25-7.R'],
+   ['R-benchmark', 'R-benchmark-25-8.R'],
+#   ['R-benchmark', 'R-benchmark-25-9.R'],
+   ['R-benchmark', 'R-benchmark-25-10.R'],
+   ['R-benchmark', 'R-benchmark-25-11.R'],
+   ['R-benchmark', 'R-benchmark-25-12.R'],
+   ['R-benchmark', 'R-benchmark-25-13.R'],
+   ['R-benchmark', 'R-benchmark-25-14.R'],
+   ['R-benchmark', 'R-benchmark-25-15.R'],
+]
+
+class R
+  def open
+    @rin, @rout, @rerr, @rpid = Open3.popen3("#{R_BIN} --slave")
+    lib = ['rpart', 'grid', 'zoo', 'sandwich', 'strucchange', 'modeltools',
+            'stats4', 'Matrix', 'survival', 'splines']
+
+    puts "Preloading libs"
+    lib.each do |l|
+      @rin.print("library(#{l})\n")
+    end
+
+    sleep(10)
+  end
+  def close
+    @rin.close
+    @rout.close
+    @rerr.close
+  end
+  def print(s)
+    @rin.write(s)
+  end
+  def gets
+    @rout.gets
+  end
+end
+
+class IO
+  def readline_nonblock
+    rlnb_buffer = ""
+    while ch = self.read_nonblock(1) 
+      rlnb_buffer << ch
+      if ch == "\n" then
+        result = rlnb_buffer
+        return result
+      end
+    end
+  end
+end
+
+def benchmark(str, r)
+  start = Time.now
+  r.print(str)
+  out = ''
+  while true
+    ret = r.gets
+    break if "#{ret}" == "[1] \"done\"\n"
+    out << "#{ret}"
+  end
+  diff = Time.now - start
+  sleep(0.1)
+  return [out, diff]
+end
+
+res         = {}
+
+unless IS_BASELINE
+  baseline = YAML::load_file(BASELINE)
+  if baseline && baseline['meta']
+    puts "Using baseline from #{baseline['meta']['date']}\n".green
+  else
+    puts "Could not load baseline #{BASELINE}\n".red
+  end
+end
+
+def spaced(str, len=6)
+  "#{str}#{' ' * (len-str.to_s.length)}"
+end
+
+RUN.times do |i|
+  r = R.new
+  r.open
+  BENCH.each do |b|
+    path      = File.join(b[0], b[1])
+    dir_path  = File.expand_path(File.join(BASEDIR, b[0]))
+    res[path] ||= []
+    puts "#{path}"
+    file      = File.join(dir_path, b[1])
+    prog      = File.read(file)
+    # replace commandArgs with manually supplied args from BENCH
+    prog.gsub!(/commandArgs\([^)]*\)/, b[2]) if b[2]
+    # set random seed for reproducibility
+    prog      = "set.seed(1)\n#{prog}"
+    prog      = "setwd('#{dir_path}')\n#{prog}"
+    prog     += "print('done')\n"
+    ret = benchmark(prog, r)
+    res[path] << ret[1]
+    if IS_BASELINE || baseline[path].nil?
+      puts "#{spaced(i)}#{spaced(res[path].mean.round(2))} +- " + \
+           "#{spaced(res[path].standard_deviation.round(2))}" + \
+           "(#{spaced(res[path].min.round(2))})"
+    else
+      rel = (res[path].mean / baseline[path].mean).round(3)
+      rel_str = "#{spaced(rel)}\t"
+
+      rm = res[path].mean.round(2)
+      rs = res[path].standard_deviation.round(2)
+      bm = baseline[path].mean.round(2)
+      bs = baseline[path].standard_deviation.round(2)
+      s  = [bs, rs].max
+      puts "#{spaced(i)}" + \
+           if (rm+s) < (bm-s) && rel < 0.98
+             then rel_str.green
+             else if (rm-s) > (bm+s) && rel > 1.02
+               then rel_str.red
+               else rel_str
+             end
+           end + \
+           "#{spaced(rm)} +- " + \
+           "#{spaced(rs)}" + \
+           "(#{spaced(res[path].min.round(2))})\t\t" + \
+           "#{spaced(bm)} +- " + \
+           "#{spaced(bs)}" + \
+           "(#{spaced(baseline[path].min.round(2))})"
+    end
+    puts ""
+  end
+  puts "--------------------------"
+  r.close
+end
+
+if IS_BASELINE
+  r_md5     = `md5sum #{R_BIN}`.split(" ")[0]
+
+  res['meta'] = {}
+  res['meta']['date']   = Time.now.to_s
+  res['meta']['md5']    = r_md5
+  res['meta']['r_bin']  = R_BIN
+
+  File.open(BASELINE, 'w') { |file| file.write(res.to_yaml) }
+end
