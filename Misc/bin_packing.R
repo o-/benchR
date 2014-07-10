@@ -43,7 +43,7 @@ binPack = function(x, capacity) {
 # change for suitable runtime
 # more items -> more iterations
 # less capacity -> more duplications
-items = 50000
+items = 17000
 capacity = 1200
 
 x = runif(items, 1, min(900, capacity-1))
