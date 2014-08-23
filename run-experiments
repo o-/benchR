@@ -1,0 +1,35 @@
+#!/bin/bash
+
+./run-experiment.rb 3 Misc/ bin_packing.R
+
+./run-experiment.rb 3 ../benchmarks/shootout/binary-trees/ binary-trees.R
+
+./run-experiment.rb 3 MachineLearningAlg/main_functions/ randomForest.R '41 1'
+
+./run-experiment.rb 3 MachineLearningAlg/main_functions/ pen_l1_regression.R '4 5'
+
+./run-experiment.rb 3 MachineLearningAlg/main_functions/ qda.R '4 1500'
+
+./run-experiment.rb 3 MachineLearningAlg/main_functions/ ctree.R '3 500'
+
+./run-experiment.rb 3 MachineLearningAlg/main_functions/ cforest.R '32 5'
+
+./run-experiment.rb 3 MachineLearningAlg/main_functions/ glm_logistic.R '47 10'
+
+./run-experiment.rb 3 MachineLearningAlg/main_functions/ knn.R '45 5'
+
+./run-experiment.rb 3 MachineLearningAlg/main_functions/ lm.R '46 40'
+
+./run-experiment.rb 3 MachineLearningAlg/main_functions/ svm.R '47 1'
+
+./run-experiment.rb 3 ../benchmarks/R-benchmark-25/ R-benchmark-25.R
+
+./run-experiment.rb 3 Shootout/spectralnorm/ spectral-norm.r '5000'
+
+./run-experiment.rb 3 ../benchmarks/shootout/k-nucleotide/ k-nucleotide.R
+
+./run-experiment.rb 3 ../benchmarks/shootout/nbody/ nbody.R
+
+./run-experiment.rb 3 ../benchmarks/shootout/fasta/ fasta.R
+
+./run-experiment.rb 3 ../benchmarks/misc/2DRandomWalk/ rw2d1.R
