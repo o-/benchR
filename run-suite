@@ -38,54 +38,60 @@ RUN         = if ARGV[-1].start_with?('-n')
               end
 
 BENCH       = [
-   ['MachineLearningAlg/main_functions', 'ada.R', 'c(2, 1)'],
-   ['MachineLearningAlg/main_functions', 'cforest.R', 'c(1, 10)'],
-   ['MachineLearningAlg/main_functions', 'ctree.R', 'c(3, 20)'],
-   ['MachineLearningAlg/main_functions', 'glm_logistic.R', 'c(3, 50)'],
+   ['MachineLearningAlg/main_functions', 'ada.R', 'c(2, 2)'],
+   ['MachineLearningAlg/main_functions', 'cforest.R', 'c(1, 15)'],
+   ['MachineLearningAlg/main_functions', 'ctree.R', 'c(3, 60)'],
+   ['MachineLearningAlg/main_functions', 'glm_logistic.R', 'c(3, 200)'],
 #   ['MachineLearningAlg/main_functions', 'glmnet_classification.R', '2 1'],
 #   ['MachineLearningAlg/main_functions', 'glmnet_regression.R', 'c(2, 1)'],
-   ['MachineLearningAlg/main_functions', 'knn.R', 'c(4, 40)'],
+   ['MachineLearningAlg/main_functions', 'knn.R', 'c(4, 100)'],
 #   ['MachineLearningAlg/main_functions', 'ksvm.R', 'c(2, 2)'],
-   ['MachineLearningAlg/main_functions', 'lda.R', 'c(2, 100)'],
-   ['MachineLearningAlg/main_functions', 'lm.R', 'c(2, 200)'],
+   ['MachineLearningAlg/main_functions', 'lda.R', 'c(2, 300)'],
+   ['MachineLearningAlg/main_functions', 'lm.R', 'c(2, 300)'],
 #   ['MachineLearningAlg/main_functions', 'mboost_classification.R', '2 1'],
 #   ['MachineLearningAlg/main_functions', 'mboost_regression.R', '2 1'],
 #   ['MachineLearningAlg/main_functions', 'pen_l1_classification.R', '1 2'],
-   ['MachineLearningAlg/main_functions', 'pen_l1_regression.R', 'c(1, 2)'],
-   ['MachineLearningAlg/main_functions', 'qda.R', 'c(4, 80)'],
-   ['MachineLearningAlg/main_functions', 'randomForest.R', 'c(2, 2)'],
-   ['MachineLearningAlg/main_functions', 'rda_as_lda.R', 'c(3, 30)'],
+   ['MachineLearningAlg/main_functions', 'pen_l1_regression.R', 'c(1, 3)'],
+   ['MachineLearningAlg/main_functions', 'qda.R', 'c(4, 150)'],
+   ['MachineLearningAlg/main_functions', 'randomForest.R', 'c(2, 8)'],
+   ['MachineLearningAlg/main_functions', 'rda_as_lda.R', 'c(3, 100)'],
 #   ['MachineLearningAlg/main_functions', 'rda_as_qda.R', '2 12'],
 #   ['MachineLearningAlg/main_functions', 'rda_regularized.R', '2 12'],
-   ['MachineLearningAlg/main_functions', 'svm.R', 'c(2, 10)'],
-   ['MachineLearningAlg/main_functions', 'tree.R', 'c(5, 50)'],
+   ['MachineLearningAlg/main_functions', 'svm.R', 'c(2, 60)'],
+   ['MachineLearningAlg/main_functions', 'tree.R', 'c(5, 300)'],
    ['Misc', 'bin_packing.R', '1'],
-   ['Shootout/spectralnorm', 'spectral-norm.r', '2000'],
-   ['R-benchmark', 'R-benchmark-25-1.R'],
+   ['Shootout/spectralnorm', 'spectral-norm.r', '4000'],
+#   ['R-benchmark', 'R-benchmark-25-1.R'],
    ['R-benchmark', 'R-benchmark-25-2.R'],
-   ['R-benchmark', 'R-benchmark-25-3.R'],
+#   ['R-benchmark', 'R-benchmark-25-3.R'],
 #   ['R-benchmark', 'R-benchmark-25-4.R'],
 #   ['R-benchmark', 'R-benchmark-25-5.R'],
-   ['R-benchmark', 'R-benchmark-25-6.R'],
-   ['R-benchmark', 'R-benchmark-25-7.R'],
+#   ['R-benchmark', 'R-benchmark-25-6.R'],
+#   ['R-benchmark', 'R-benchmark-25-7.R'],
    ['R-benchmark', 'R-benchmark-25-8.R'],
 #   ['R-benchmark', 'R-benchmark-25-9.R'],
    ['R-benchmark', 'R-benchmark-25-10.R'],
-   ['R-benchmark', 'R-benchmark-25-11.R'],
-   ['R-benchmark', 'R-benchmark-25-12.R'],
-   ['R-benchmark', 'R-benchmark-25-13.R'],
-   ['R-benchmark', 'R-benchmark-25-14.R'],
-   ['R-benchmark', 'R-benchmark-25-15.R'],
+#   ['R-benchmark', 'R-benchmark-25-11.R'],
+#   ['R-benchmark', 'R-benchmark-25-12.R'],
+#   ['R-benchmark', 'R-benchmark-25-13.R'],
+#   ['R-benchmark', 'R-benchmark-25-14.R'],
+#   ['R-benchmark', 'R-benchmark-25-15.R'],
 ]
 
 class R
+  @@lib = ['rpart', 'grid', 'zoo', 'sandwich', 'strucchange', 'modeltools',
+         'stats4', 'Matrix', 'survival', 'splines', 'ada', 'penalized',
+         'randomForest', 'klaR', 'e1071', 'party']
+
   def open
+    #@rin, @rout, @rpid = Open3.popen2("#{R_BIN} --slave")
     @rin, @rout, @rerr, @rpid = Open3.popen3("#{R_BIN} --slave")
-    lib = ['rpart', 'grid', 'zoo', 'sandwich', 'strucchange', 'modeltools',
-            'stats4', 'Matrix', 'survival', 'splines']
 
     puts "Preloading libs"
-    lib.each do |l|
+    @@lib.each do |l|
+      puts "install.packages(\"#{l}\")"
+      #puts "library(#{l})"
+      @rin.print("message(\"#{l}\")\n")
       @rin.print("library(#{l})\n")
     end
 
@@ -127,6 +133,15 @@ def benchmark(str, r)
     out << "#{ret}"
   end
   diff = Time.now - start
+  #r.print("gcinfo(1)\n")
+  #r.print("gc()\n")
+  #r.print("gcinfo(0)\n")
+  #r.gets
+  #l = ""
+  #while l != "[1] FALSE\n"
+  #  l = r.gets
+  #  puts l
+  #end
   sleep(0.1)
   return [out, diff]
 end
