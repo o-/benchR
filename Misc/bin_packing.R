@@ -43,9 +43,9 @@ binPack = function(x, capacity) {
 # change for suitable runtime
 # more items -> more iterations
 # less capacity -> more duplications
-items = 17000
-capacity = 1200
+items = 82000
+capacity = 4200
 
 x = runif(items, 1, min(900, capacity-1))
 result = binPack(x, capacity)
-print(result)
+#print(result)
