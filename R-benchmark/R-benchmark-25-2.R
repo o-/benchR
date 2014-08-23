@@ -46,7 +46,7 @@ options(object.size=100000000)
 cumulate <- 0; b <- 0
 for (i in 1:runs) {
   a <- abs(matrix(Rnorm(2500*2500)/2, ncol=2500, nrow=2500));
-  invisible(gc())
+#  invisible(gc())
   timing <- system.time({ 
     b <- a^1000 
   })[3]

@@ -47,7 +47,7 @@ cumulate <- 0; b <- 0
 for (i in 1:runs) {
   a <- Rnorm(2500*2500); dim(a) <- c(2500, 2500)
   #Matrix.class(a)
-  invisible(gc())
+#  invisible(gc())
   timing <- system.time({
     #b <- determinant(a, logarithm=F)
     # Rem: the following is slower on my computer!

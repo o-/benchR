@@ -47,7 +47,7 @@ options(object.size=100000000)
 cumulate <- 0; b <- 0
 for (i in 1:runs) {
   a <- new("dgeMatrix", x = Rnorm(1600*1600), Dim = as.integer(c(1600, 1600)))
-  invisible(gc())
+#  invisible(gc())
   #a <- Rnorm(400*400); dim(a) <- c(400, 400)
   timing <- system.time({
   #  b <- qr.solve(a)
